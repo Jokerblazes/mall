@@ -1,0 +1,749 @@
+{
+	"info": {
+		"_postman_id": "a2603e9c-32e1-48de-846e-08fa464637ba",
+		"name": "dmallQuiz copy",
+		"description": "京西商城API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "product",
+			"description": "product API",
+			"item": [
+				{
+					"name": "创建新商品",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"tests[\"Status code is 201\"] = responseCode.code === 201;",
+									"",
+									"tests[\"response headers have location sent as part of request\"] = postman.getResponseHeader(\"location\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"test1\",\n\t\"description\": \"test\",\n\t\"price\": 20\n}"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/products",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products"
+							]
+						},
+						"description": "### API功能：\n- 创建新的商品信息：\n- 同时需要创建对应商品的库存信息\n\n### 输入：\n```\n{\n\t\"name\": \"test1\",\n\t\"description\": \"test\",\n\t\"price\": 20\n}\n```\n### 输出：\n\n- response中的Headers中应该包含对应商品的可访问路径：`location:http://IP:8083/products/10`\n- status状态码为201"
+					},
+					"response": []
+				},
+				{
+					"name": "修改商品信息",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"test666\",\n\t\"description\": \"test\",\n\t\"price\": 1000\n}"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/products/10",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products",
+								"10"
+							]
+						},
+						"description": "### API功能：\n- 修改对应商品信息\n\n### 输入：\n```\n{\n\t\"name\": \"test666\",\n\t\"description\": \"test\",\n\t\"price\": 1000\n}\n```\n### 输出：\n```\n{\n    \"status\":204\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "根据商品id查找商品",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "45c30c8e-c013-436d-b789-f9ceb83d9e1a",
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON;",
+									"  ",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"",
+									"tests[\"Reponse data is object\"] = _.isObject(responseJSON);",
+									"tests['response has id'] = _.has(responseJSON, 'id');",
+									"tests['response has name'] = _.has(responseJSON, 'name');",
+									"tests['response has description'] = _.has(responseJSON, 'description');",
+									"tests['response has price'] = _.has(responseJSON, 'price');",
+									"tests['response has inventory'] = _.has(responseJSON, 'inventory');",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/products/1",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products",
+								"1"
+							]
+						},
+						"description": "### API功能：\n- 根据商品id查找商品\n\n### 输入：空\n### 输出：\n```\n{\n    body:{\n        \"id\": 1,\n    \t\"name\": \"test666\",\n    \t\"description\": \"test\",\n    \t\"price\": 1000,\n    \t\"inventory\": {\n        \t\"id\": 1,\n        \t\"count\": 113,\n        \t\"lockedCount\": 107\n    \t}\n\t},\n    \"status\":200\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "查找所有商品",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON;",
+									"  ",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"",
+									"tests[\"Reponse data is array\"] = _.isArray(responseJSON);",
+									"tests['response matches the data sent in request'] = (responseJSON && responseJSON.length > 0);",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/products",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products"
+							]
+						},
+						"description": "### API功能：\n- 查找所有商品信息\n\n### 输入：空\n### 输出：\n```\n{\n    body:\n    [\n\t    {\n\t        \"id\": 1,\n\t        \"name\": \"test666\",\n\t        \"description\": \"test\",\n\t        \"price\": 1000,\n\t        \"inventory\": {\n\t            \"id\": 1,\n\t            \"count\": 113,\n\t            \"lockedCount\": 107\n\t        }\n\t    },\n\t    {\n\t        \"id\": 2,\n\t        \"name\": \"方便面\",\n\t        \"description\": \"康师傅\",\n\t        \"price\": 5,\n\t        \"inventory\": {\n\t            \"id\": 2,\n\t            \"count\": 100,\n\t            \"lockedCount\": 86\n\t        }\n\t    },\n\t    {\n\t        \"id\": 3,\n\t        \"name\": \"农夫山泉\",\n\t        \"description\": \"矿泉水\",\n\t        \"price\": 3,\n\t        \"inventory\": {\n\t            \"id\": 3,\n\t            \"count\": 100,\n\t            \"lockedCount\": 85\n\t        }\n\t    }\n\t],\n    \"status\":200\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "按照name查找商品",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON;",
+									"  ",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"",
+									"tests[\"Reponse data is array\"] = _.isArray(responseJSON);",
+									"tests['response matches the data sent in request'] = (responseJSON && responseJSON.length > 0);",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/products?name=方便面",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "方便面"
+								}
+							]
+						},
+						"description": "### API功能：\n- 根据商品name查找所有商品\n\n### 输入：空\n### 输出：\n```\n{\n    body:\n    [\n\t    {\n\t        \"id\": 2,\n\t        \"name\": \"方便面\",\n\t        \"description\": \"康师傅\",\n\t        \"price\": 5,\n\t        \"inventory\": {\n\t            \"id\": 2,\n\t            \"count\": 100,\n\t            \"lockedCount\": 86\n\t        }\n\t    }\n\t],\n    \"status\":200\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "根据name和描述模糊查询",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON;",
+									"  ",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"",
+									"tests[\"Reponse data is array\"] = _.isArray(responseJSON);",
+									"tests['response matches the data sent in request'] = (responseJSON && responseJSON.length > 0);",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/products?name=方便面&description=师",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "方便面"
+								},
+								{
+									"key": "description",
+									"value": "师"
+								}
+							]
+						},
+						"description": "### API功能：\n- 根据商品name和description字段模糊查找商品\n\n### 输入：空\n### 输出：\n```\n{\n    body:\n    [\n\t    {\n\t        \"id\": 2,\n\t        \"name\": \"方便面\",\n\t        \"description\": \"康师傅\",\n\t        \"price\": 5,\n\t        \"inventory\": {\n\t            \"id\": 2,\n\t            \"count\": 100,\n\t            \"lockedCount\": 86\n\t        }\n\t    }\n\t],\n    \"status\":200\n}\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"description": "order API",
+			"item": [
+				{
+					"name": "创建订单",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"response headers have location sent as part of request\"] = postman.getResponseHeader('location')",
+									"tests[\"Status code is 201\"] = responseCode.code === 201;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t   \"productId\":1,\n\t   \"purchaseCount\":3\n\t},\t\n\t{\n\t   \"productId\":2,\n\t   \"purchaseCount\":1\n\t},\n\t{\n\t   \"productId\":3,\n\t   \"purchaseCount\":5\n\t}\n]"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/orders",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"orders"
+							]
+						},
+						"description": "### API功能：\n- 创建一条订单信息：\n- 首先需要创建对应商品的货物信息(商品信息快照)\n- 其次在库存信息中锁定对应商品的库存数量\n- 此时订单状态为：unPaid\n\n### 输入：\n```\n[\n\t{\n\t   \"productId\":\"1\",\n\t   \"purchaseCount\":\"3\"\n\t},\t\n\t{\n\t   \"productId\":\"2\",\n\t   \"purchaseCount\":\"1\"\n\t},\n\t{\n\t   \"productId\":\"4\",\n\t   \"purchaseCount\":\"5\"\n\t}\n]\n```\n### 输出：\n```\n{\n    body:{\n    \tid:\"1\",\n    \ttotalPrice:\"230\",\n    \tstatus:\"unPaid\",\n    \tcreateTime:\"2018-4-13\",\n    \tfinishTime:\"\",\n    \tpaidTime:\"\",\n    \twithdrawnTime:\"\"\n    },\n\tstatus：201\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "支付订单",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/orders/10?orderStatus=paid",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"orders",
+								"10"
+							],
+							"query": [
+								{
+									"key": "orderStatus",
+									"value": "paid"
+								}
+							]
+						},
+						"description": "### API功能：\n- 支付订单\n### 输入：\n```\n{\n   \"status\":\"paid\"\n}\n```\n### 输出\n```\n{\n\tid:\"1\",\n\ttotalPrice:\"230\",\n\tstatus:\"paid\",\n\tcreateTime:\"2018-4-13\",\n\tfinishTime:\"\",\n\tpaidTime:\"2018-4-14\",\n\twithdrawnTime:\"\"\n\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "撤销订单",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/orders/5?orderStatus=withdrawn",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"orders",
+								"5"
+							],
+							"query": [
+								{
+									"key": "orderStatus",
+									"value": "withdrawn"
+								}
+							]
+						},
+						"description": "### API功能：\n- 撤销订单\n### 输入：\n```\n{\n   \"status\":\"withDrawn\"\n}\n```\n### 输出\n```\n{\n\tid:\"1\",\n\ttotalPrice:\"230\",\n\tstatus:\"withDrawn\",\n\tcreateTime:\"2018-4-13\",\n\tfinishTime:\"\",\n\tpaidTime:\"2018-4-14\",\n\twithdrawnTime:\"2018-4-14\"\n\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "查看订单信息",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON;",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"",
+									"tests[\"Reponse data is object\"] = _.isObject(responseJSON);",
+									"tests['response has id'] = _.has(responseJSON, 'id');",
+									"tests['response has totalPrice'] = _.has(responseJSON, 'totalPrice');",
+									"tests['response has userId'] = _.has(responseJSON, 'userId');",
+									"tests['response has createTime'] = _.has(responseJSON, 'createTime');",
+									"tests['response has purchaseItemList'] = _.has(responseJSON, 'purchaseItemList');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"status\":\"finished\"\n}"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/orders/1",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"orders",
+								"1"
+							]
+						},
+						"description": "### API:\n- 查看订单id为1的订单信息以及订单中所有商品的信息\n### 输入\n- 空\n### 输出\n```\n{\n    body:{\n\t    id:\"1\",\n\t   totalPrice:\"230\",\n\t   status:\"finished\",\n\t   createTime:\"2018-4-13\",\n\t   finishTime:\"2018-4-20\",\n\t   paidTime:\"2018-4-14\",\n\t   withdrawnTime:\"\",\n\t   products:[\n\t     id:\"1\",\n\t     productName:\"三颗松鼠大礼包\",\n\t     productDescription:\"七种零食包装\",\n\t     purchasePrice:\"60\",\n\t     purchaseCount:\"2\"\n\t   ],\n\t    id:\"2\",\n\t     productName:\"飘柔洗护套装\",\n\t     productDescription:\"滋润秀发\",\n\t     purchasePrice:\"110\",\n\t     purchaseCount:\"1\"\n\t   ]\n   },\n   status:200\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "根据用户Id查看订单",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON;",
+									"",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"tests[\"Reponse data is array\"] = _.isArray(responseJSON);",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests['response matches the data sent in request'] = (responseJSON && responseJSON.length > 0);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"status\":\"finished\"\n}"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/orders?userId=1",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "### API功能\n- 根据用户Id查看该用户拥有的所有订单\n### 输入\n- 空\n### 输出\n```\n{\n    body:[\n      {\n\t    id:\"1\",\n\t\ttotalPrice:\"230\",\n\t    status:\"finished\",\n        createTime:\"2018-4-13\",\n   \t    finishTime:\"2018-4-20\",\n\t    paidTime:\"2018-4-14\",\n\t\twithdrawnTime:\"\",\n\t\tproducts:[\n\t\t   {\n\t         id:\"1\",\n\t\t     productName:\"三颗松鼠大礼包\",\n\t\t     productDescription:\"七种零食包装\",\n\t\t     purchasePrice:\"60\",\n\t\t     purchaseCount:\"2\"\n\t\t   },\n\t\t   {\n\t\t    id:\"2\",\n\t\t     productName:\"飘柔洗护套装\",\n\t\t     productDescription:\"滋润秀发\",\n\t\t     purchasePrice:\"110\",\n\t\t     purchaseCount:\"1\"\n\t\t   }\n\t\t]\n\t   },\n    ],\n   status:200\n}\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LogisticsRecord",
+			"description": "LogisticsRecord API",
+			"item": [
+				{
+					"name": "查看物流详情",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1b78405f-c280-4dd8-8b6b-698da24be18b",
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON;",
+									"  ",
+									"try { ",
+									"    responseJSON = JSON.parse(responseBody); ",
+									"    tests['response is valid JSON'] = true;",
+									"}",
+									"catch (e) { ",
+									"    responseJSON = {}; ",
+									"    tests['response is valid JSON'] = false;",
+									"}",
+									"",
+									"tests[\"Reponse data is object\"] = _.isObject(responseJSON);",
+									"tests['response has id'] = _.has(responseJSON, 'id');",
+									"tests['response has deliveryMan'] = _.has(responseJSON, 'deliveryMan');",
+									"tests['response has outboundTime'] = _.has(responseJSON, 'outboundTime');",
+									"tests['response has signedTime'] = _.has(responseJSON, 'signedTime');",
+									"tests['response has status'] = _.has(responseJSON, 'status');",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"status\":\"finished\"\n}"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/logisticsRecords/1",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"logisticsRecords",
+								"1"
+							]
+						},
+						"description": "### 根据物流订单Id查看物流详情\n\n### 输入：\n```\n/{id}\n```\n### 输出：\n```\n{\n\tbody:{\n\t\t\"id\":1,\n\t\t\"logisticsStatus\":\"readyToShip\",\n\t\t\"outboundTime\":\"null\",\n\t\t\"signedTime\":\"null\",\n\t\t\"deliveryMan\":\"李师傅\"\n\t},\n\tstatus:200\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "发货",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/logisticsRecords/10/orders/1?logisticsStatus=shipping",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"logisticsRecords",
+								"10",
+								"orders",
+								"1"
+							],
+							"query": [
+								{
+									"key": "logisticsStatus",
+									"value": "shipping"
+								}
+							]
+						},
+						"description": "### API功能\n- 根据物流订单Id修改物流状态为Shiping，\n- 同时将outboundTime(出库时间)修改为当前时间\n\n### 输入：空\n\n### 输出：\n```\n{\n\tstatus:204\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "签收货物",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 204\"] = responseCode.code === 204;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/logisticsRecords/10/orders/1?logisticsStatus=signed",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"logisticsRecords",
+								"10",
+								"orders",
+								"1"
+							],
+							"query": [
+								{
+									"key": "logisticsStatus",
+									"value": "signed"
+								}
+							]
+						},
+						"description": "### API功能\n- 根据物流订单Id修改物流状态为signed，\n- 同时修改signedTime(签收时间)为当前时间\n\n### 输入：空\n\n### 输出：\n```\n{\n\tstatus:204\n}\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "inventory",
+			"description": "inventory API\n",
+			"item": [
+				{
+					"name": "修改库存数量",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "95bb850a-e302-419a-bb44-33b449c64f98",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"count\": 10\n}"
+						},
+						"url": {
+							"raw": "http://{{IP}}:{{port}}/inventories/1",
+							"protocol": "http",
+							"host": [
+								"{{IP}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"inventories",
+								"1"
+							]
+						},
+						"description": "### API功能：\n- 修改id为1的商品库存信息\n- 输入代表新增的库存数量\n\n### 输入：\n```\n{\n   \"count\": 10\n}\n```\n### 输出：\n```\n{\n    \"status\":204\n}\n```"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
