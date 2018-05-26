@@ -1,7 +1,7 @@
 server:
   port: 8083
 app:
-  host: 117.22.253.29
+  host: localhost
   port: ${server.port}
 spring:
   datasource:
