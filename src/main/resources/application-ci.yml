@@ -1,4 +1,4 @@
 dbs:
   database:
-    host: "localhost"
-    port: 3307
+    host: "pwc-mysql"
+    port: 3306
