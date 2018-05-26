@@ -1,7 +1,7 @@
 server:
   port: 8083
 app:
-  host: localhost
+  host: pwc-mysql
   port: ${server.port}
 spring:
   datasource:
