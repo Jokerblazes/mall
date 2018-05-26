@@ -1,4 +1,4 @@
 dbs:
   database:
-    host: "pwc-mysql"
+    host: "117.22.253.29"
     port: 3306
