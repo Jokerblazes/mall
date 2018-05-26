@@ -1,4 +1,4 @@
-spring.profiles.active : dev
+spring.profiles.active : ci
 server:
   port: 8083
 app:
